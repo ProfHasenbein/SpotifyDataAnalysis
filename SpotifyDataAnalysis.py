@@ -2,9 +2,9 @@ import json
 
 #change file location here:
 files = [
-    "/home/nibblus/Documents/SpotifyData/Spotify Extended Streaming History/Streaming_History_Audio_2021-2023_0.json",
-    "/home/nibblus/Documents/SpotifyData/Spotify Extended Streaming History/Streaming_History_Audio_2023-2024_1.json",
-    "/home/nibblus/Documents/SpotifyData/Spotify Extended Streaming History/Streaming_History_Audio_2024-2025_2.json"
+    "<path_to_your_file>",
+    "<path_to_your_file>",
+    "<path_to_your_file>"
 ]
 #up there ^
 
