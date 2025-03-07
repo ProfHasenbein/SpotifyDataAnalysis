@@ -31,18 +31,18 @@ Now comes the best part: All this **for free**! Unlike stats.fm or some other pl
 # How to use the script
 
 1. **Download your Spotify data**  
-   First, head over to Spotify and download your personal streaming data. You can do this via [Spotify's Data Export Page](https://www.spotify.com/us/account/privacy/). After about one week you'll receive a ZIP file with all your streaming history
+   First, head over to Spotify and download your personal streaming data. You can do this via [Spotify's Data Export Page](https://www.spotify.com/us/account/privacy/). After about one week you'll receive a ZIP file with your entire streaming history
 
-   **_Small sidenote:_** Depending on what you selected on the Data Export Page, you'll receive multiple emails. Unfortunately, all of the download folers are named the same, so make sure to download the one that contains the "Spotify Extended Streaming History" folder.
+   **_Sidenote:_** Depending on what you've selected on the Data Export Page, you'll receive multiple emails. Unfortunately, all of the download folders are named the same, so make sure to download the one that contains the "Spotify Extended Streaming History" folder.
 
 3. **Install Python**  
    Make sure you have Python installed on your system. If you don't, download and install it from [python.org](https://www.python.org/downloads/)
 
 4. **Clone or Download the script**  
-   Clone or download this repository to your local machine. You can use `git clone https://github.com/ProfHasenbein/SpotifyDataAnalysis.git` or simply download the ZIP and extract it
+   Clone or download this repository to your local machine. You can use `git clone https://github.com/ProfHasenbein/SpotifyDataAnalysis.git` or simply download the ZIP and extract it.
 
 5. **Prepare your Data**  
-   Extract the data from Spotify into a folder. You’ll need the `Streaming_History_Audio_YEAR-YEAR.json` files to use this script
+   Extract the data from Spotify into a folder. You’ll need the `Streaming_History_Audio_YEAR-YEAR.json` files to use this script.
 
 6. **Link the files**  
    Open the script in your preferred text editor and change the filenames to match the location of your data:
