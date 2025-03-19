@@ -68,108 +68,150 @@ print(f"Total songs skipped: {total_skipped} songs")
 
 print(f"\n{HEADER}---------------Most played Songs---------------{RESET}\n")
 
-counter0 = {}
-rank0 = 1
+counter_songs = {}
+rank_songs = 1
 
 for entry in daten:
     song_name = entry.get("master_metadata_track_name")
     artist_name = entry.get("master_metadata_album_artist_name")
-
+    
     if song_name and artist_name:
-        if (song_name, artist_name) in counter0:
-            counter0[(song_name, artist_name)] += 1
+        duration = entry.get("ms_played", 0)
+        
+        if (song_name, artist_name) in counter_songs:
+            counter_songs[(song_name, artist_name)]["count"] += 1
+            counter_songs[(song_name, artist_name)]["time"] += duration
         else:
-            counter0[(song_name, artist_name)] = 1 
+            counter_songs[(song_name, artist_name)] = {"count": 1, "time": duration}
 
-sorted_songs = sorted(counter0.items(), key=lambda x: x[1], reverse=True)
+sorted_songs = sorted(counter_songs.items(), key=lambda x: x[1]["count"], reverse=True)
 
-top_10_songs = sorted_songs[:15]
-for (song0, artist), count in top_10_songs:
-    print(f"{NUMBER}{rank0}.{RESET} '{song0}' by {artist} {IMPORTANT}{count}x {RESET}streamed")
-    rank0 += 1
+top_15_songs = sorted_songs[:15]
+for (song, artist), data in top_15_songs:
+    
+    songs_total_minutes = data["time"] / 1000 / 60
+    songs_total_hours = songs_total_minutes / 60
+
+    print(f"{NUMBER}{rank_songs}.{RESET} '{song}' by {artist} {IMPORTANT}{data['count']}x {RESET}||{IMPORTANT} {songs_total_minutes:.2f} min {RESET}||{IMPORTANT} {songs_total_hours:.2f}h {RESET}streamed")
+    rank_songs += 1
 
 
 print(f"\n{HEADER}---------------Most skipped songs---------------{RESET}\n")
 
-# Sortiere und zeige die meistübersprungenen Songs an
 sorted_skipped_songs = sorted(skipped_songs.items(), key=lambda x: x[1], reverse=True)
+
 for rank, (song, count) in enumerate(sorted_skipped_songs[:10], start=1):
-    # Finde den Künstlernamen für das aktuelle Lied
     for entry in daten:
         if entry.get("master_metadata_track_name") == song:
             artist = entry.get("master_metadata_album_artist_name", "Unknown Artist")
             break 
+
     print(f"{NUMBER}{rank}.{RESET} '{song}' by {artist} {IMPORTANT}{count}x {RESET} skipped")
 
 
 print(f"\n{HEADER}---------------Most played artists---------------{RESET}\n")
 
-counterSS = 1 #Swiftie Stats counter
-counter = {}
-rank = 1
+counterSS = 1  # Swiftie Stats counter
+counter_artists = {}
+rank_artists = 1  
 
 for entry in daten:
     if "master_metadata_album_artist_name" in entry:
         artist_name = entry["master_metadata_album_artist_name"]
+        
+        if artist_name is not None:
+            if artist_name in counter_artists:
+                counter_artists[artist_name]["count"] += 1
+                if "ms_played" in entry:
+                    counter_artists[artist_name]["time"] += entry["ms_played"]
+            else:
+                counter_artists[artist_name] = {"count": 1, "time": entry.get("ms_played", 0)}
+            
+        if artist_name == "Taylor Swift":  # Swiftie Stats counter
+            counterSS += 1
 
-    if artist_name is not None:
-        if artist_name in counter:
-            counter[artist_name] += 1
-        else:
-            counter[artist_name] = 1
-    if artist_name == "Taylor Swift":  # SS counter
-        counterSS += 1 
-
-
-
-sorted_artists = sorted(counter.items(), key=lambda x: x[1], reverse=True)
+sorted_artists = sorted(counter_artists.items(), key=lambda x: x[1]["time"], reverse=True)
 
 top_10_artists = sorted_artists[:15]
-for artist, count in top_10_artists:
-    print(f"{NUMBER}{rank}.{RESET} '{artist}' {IMPORTANT}'{count}x{RESET} streamed")
-    rank += 1
+for artist, data in top_10_artists:
+    
+    total_minutes = data["time"] / 1000 / 60
+    total_hours = data["time"] / 1000 / 60 / 60
+
+    print(f"{NUMBER}{rank_artists}.{RESET} '{artist}' {IMPORTANT}{data['count']}x {RESET}|| {IMPORTANT}{total_minutes:.2f} min {RESET}|| {IMPORTANT}{total_hours:.2f} h {RESET}streamed ")
+    rank_artists += 1
+
 
 print(f"\n{HEADER}---------------Devices used for Spotify---------------{RESET}\n")
 
-counter2 = {}
-rank2 = 1
+counter_devices = {}
+rank_devices = 1
 
 for entry in daten:
     if "platform" in entry:
         user_agent = entry["platform"]
 
-        if user_agent in counter2:
-            counter2[user_agent] += 1
+        if user_agent in counter_devices:
+            counter_devices[user_agent] += 1
         else:
-            counter2[user_agent] = 1
+            counter_devices[user_agent] = 1
 
-sorted_agents = sorted(counter2.items(), key=lambda x: x[1], reverse=True)
+sorted_agents = sorted(counter_devices.items(), key=lambda x: x[1], reverse=True)
 
 top_10_agents = sorted_agents[:10]
 for agent, count in top_10_agents:
-    print(f"{NUMBER}{rank2}.{RESET}'{agent}' {IMPORTANT}{count}x{RESET}")
-    rank2 += 1
+    print(f"{NUMBER}{rank_devices}.{RESET}'{agent}' {IMPORTANT}{count}x{RESET}")
+    rank_devices += 1
+
 
 print(f"\n{HEADER}---------------Countries listened in---------------{RESET}\n")
 
-counter3 = {}
-rank3 = 1
+counter_countries = {}
+rank_countries = 1
 
 for entry in daten:
     if "conn_country" in entry:
         country = entry["conn_country"]
 
-        if country in counter3:
-            counter3[country] += 1
+        if country in counter_countries:
+            counter_countries[country] += 1
         else:
-            counter3[country] = 1
+            counter_countries[country] = 1
 
-sorted_countries = sorted(counter3.items(), key=lambda x: x[1], reverse=True)
+sorted_countries = sorted(counter_countries.items(), key=lambda x: x[1], reverse=True)
 
 top_10_countries = sorted_countries[:10]
 for country, count in top_10_countries:
-    print(f"{NUMBER}{rank3}.{RESET} '{country}' {IMPORTANT}{count}x{RESET}")
-    rank3 += 1
+    print(f"{NUMBER}{rank_countries}.{RESET} '{country}' {IMPORTANT}{count}x{RESET}")
+    rank_countries += 1
+
+
+print(f"\n{HEADER}---------------Top Genres---------------{RESET}\n") # Not working just yet
+
+# Spotify API Credentials
+CLIENT_ID = ""
+CLIENT_SECRET = ""
+
+print(f"\n{HEADER}---------------Reasons for Song End---------------{RESET}\n")
+
+counter_end_reasons = {} 
+rank_end_reasons = 1 
+
+for entry in daten:
+    if "reason_end" in entry:
+        reason = entry["reason_end"]
+
+        if reason in counter_end_reasons:
+            counter_end_reasons[reason] += 1
+        else:
+            counter_end_reasons[reason] = 1
+
+sorted_reasons = sorted(counter_end_reasons.items(), key=lambda x: x[1], reverse=True)
+
+for reason, count in sorted_reasons:
+    print(f"{NUMBER}{rank_end_reasons}.{RESET} '{reason}' {IMPORTANT}{count}x{RESET}")
+    rank_end_reasons += 1
+
 
 print(f"\n{HEADER}---------------SS - Swiftie Stats---------------{RESET}\n")
 
@@ -192,6 +234,9 @@ rankSS = 1
 for song, count in sorted(taylor_swift_songs.items(), key=lambda x: x[1], reverse=True)[:20]:
     print(f"{NUMBER}{rankSS}.{RESET} '{song}' {IMPORTANT}{count}x{RESET} streamed")
     rankSS += 1
+
+
+
 
 logo= r"""
 +--------------------------------------------------------+
